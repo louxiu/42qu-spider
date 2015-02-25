@@ -1,15 +1,19 @@
 # coding:utf-8
 from spider.spider import route, Handler, spider
-import re, commands, os
+import re
+import commands
+import os
 
 # http://dark7110.blog.fc2.com/blog-entry-24.html
 
 HTTP = 'http://www.blgl8.com/%s'
 VOLUMES_NAME_DICT = {}
 
+
 @route('/comic-i/blgl\d+/')
 class Volumes(Handler):
     re_link_and_name = re.compile('^.*(http://.*)\'>(.*)')
+
     def get(self):
         for link in self.extract_all('<div><a title=', '</a>'):
             linke_name_res = self.re_link_and_name.match(link)
@@ -25,11 +29,12 @@ class Volumes(Handler):
             else:
                 pass
 
+
 @route('/manhua-v/\d+cv\d+/')
 class Volume(Handler):
-    def get_array_files(self, sFiles):
-        # print sFiles
-        status, output = commands.getstatusoutput("node unsuan.js " + sFiles)
+    def get_array_files(self, s_files):
+        # print s_files
+        status, output = commands.getstatusoutput("node unsuan.js " + s_files)
         if status == 0:
             array_files = output.split('|')
             return array_files
@@ -39,18 +44,19 @@ class Volume(Handler):
         return volume_name
 
     def get(self):
-        for segment in self.extract_all('<script>var sFiles=\"', '</script>'):
+        for segment in self.extract_all('<script>var s_files=\"', '</script>'):
             segment_list = segment.split('";')
-            sFiles = segment_list[0]
+            s_files = segment_list[0]
             # http://www.blgl8.com/script/ds/ds.js
-            sDS = 'http://comic.1mh.in:2813/'
-            sPath = segment_list[1].split('="')[1]
-            array_files = self.get_array_files(sFiles)
+            s_ds = 'http://comic.1mh.in:2813/'
+            s_path = segment_list[1].split('="')[1]
+            array_files = self.get_array_files(s_files)
             volume_name = self.get_volume_name()
 
             for pic_file in array_files:
-                # print volume_name + sDS + sPath + pic_file
-                wget_command = 'wget ' + sDS + sPath + pic_file + " -P " + volume_name
+                # print volume_name + s_ds + s_path + pic_file
+                wget_command = 'wget ' + s_ds + s_path + pic_file + \
+                               " -P " + volume_name
                 print wget_command
                 # status, output = commands.getstatusoutput(wget_command)
                 # print status, output
