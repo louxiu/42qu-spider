@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: pywhois
+Version: 0.1
+Summary: Whois querying and parsing of domain registration information.
+Home-page: http://code.google.com/p/pywhois/
+Author: Andrey Petrov
+Author-email: andrey.petrov@shazow.net
+License: MIT
+Description: UNKNOWN
+Keywords: whois
+Platform: UNKNOWN
